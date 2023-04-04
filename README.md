@@ -53,9 +53,8 @@ The immediate result of `query()` isn't very useful. You'll want to chain a call
 You don't get property and key access like `records` gave you. You get one or the other.
 By default, you get a dictionary. Breaking API change from `records`? Yes. I don't care.
 
-To get a `collections.namedtuple`, pass `as_nt=True` as a parameter to any method.
-Your type hints will break since you can't define a hint for dynamically created named tuples,
-but it's what's it's.
+To get a `sqlalchemy.engine.Row` (basically `collections.namedtuple`) object instead,
+pass `as_nt=True` as a parameter to any method.
 
 You can also iterate over the whole result set, with each dictionary record being `yield`ed
 (you cannot get a named tuple when doing this):

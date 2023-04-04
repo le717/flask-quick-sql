@@ -1,5 +1,4 @@
-from collections import namedtuple
-from typing import Any, ForwardRef, Generator
+from typing import Any, Generator
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -22,30 +21,23 @@ class Result:
         for r in self.all():
             yield r
 
-    def _as_namedtuple(self, data: Row) -> ForwardRef("QuickRow"):
-        """Return a row as a NamedTuple."""
-        nt_result = namedtuple("QuickRow", list(data._mapping.keys()))
-        return nt_result(**data._mapping)
-
-    def all(self, *, as_nt: bool = False) -> list[dict[str, Any]]:
+    def all(self, *, as_nt: bool = False) -> list[dict[str, Any]] | Row:
         """Fetch all results from the query."""
-        return [
-            self._as_namedtuple(r) if as_nt else r._asdict() for r in self._result.all()
-        ]
+        return [r if as_nt else r._asdict() for r in self._result.all()]
 
-    def first(self, *, as_nt: bool = False) -> dict[str, Any] | None:
+    def first(self, *, as_nt: bool = False) -> dict[str, Any] | Row | None:
         """Fetch the first result from the query."""
         # Specifically handle no results
         if (r := self._result.first()) is None:
             return None
-        return self._as_namedtuple(r) if as_nt else r._asdict()
+        return r if as_nt else r._asdict()
 
-    def one(self, *, as_nt: bool = False) -> dict[str, Any] | None:
+    def one(self, *, as_nt: bool = False) -> dict[str, Any] | Row | None:
         """Fetch the only result from the query."""
         # Specifically handle no results
         if (r := self._result.one_or_none()) is None:
             return None
-        return self._as_namedtuple(r) if as_nt else r._asdict()
+        return r if as_nt else r._asdict()
 
 
 class QuickSQL:
