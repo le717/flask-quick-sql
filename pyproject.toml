@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flask-quick-sql"
-version = "1.0.0"
+version = "1.0.1"
 description = "A quick way to run SQL in your Flask app."
 authors = ["Caleb <le717@users.noreply.github.com>"]
 readme = "README.md"
