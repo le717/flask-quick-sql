@@ -18,6 +18,14 @@ when I deleted it from my app.
 
 ## Usage
 
+* Python 3.10+
+* Flask 2.2+
+* Flask-SQLAlchemy 3.0+
+* SQLAlchemy 2.0+
+
+If a SQLAlchemy instance already exists in your app, it will be used. Otherwise, an instance
+will be created for you.
+
 ```python
 from flask import Flask
 from flask_quick_sql import QuickSQL
@@ -25,9 +33,12 @@ from flask_quick_sql import QuickSQL
 
 def create_app():
     app = Flask(__name__)
+
+    # You must set this
     app.config["SQLALCHEMY_DATABASE_URI"] = ...
     quick_sql = QuickSQL(app)
 
+    # A very wasteful yet all too common query, especially in PHP land
     all_users = quick_sql.query("SELECT * FROM users").all()
     print(all_users[0]["username"])
 
@@ -40,17 +51,18 @@ You don't get property and key access like `records` gave you. You get one or th
 
 To get a `collections.namedtuple`, pass `as_nt=True` as a parameter to any method. Your type hints will break since you can't define a hint for dynamically created named tuples, but it's what's it's.
 
-You can also iterate over the whole result set, with each record being `yield`ed:
+You can also iterate over the whole result set, with each dictionary record being `yield`ed
+(you cannot get a named tuple when doing this):
 
 ```python
-[User(r) for r in quick_sql.query("SELECT * FROM users")]
+[User(**r) for r in quick_sql.query("SELECT * FROM users")]
 ```
 
 Because SQLAlchemy is used under the hood, prepared statements work as expected:
 
 ```python
 sql = "SELECT * FROM users WHERE is_active = :is_active"
-[User(r) for r in db.query(sql, is_active=False)]
+[User(**r) for r in db.query(sql, is_active=False)]
 ```
 
 Have fun running your [SQuirreL](http://www.squirrelsql.org/) queries.
