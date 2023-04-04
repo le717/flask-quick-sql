@@ -12,7 +12,7 @@ __all__ = ["Result", "QuickSQL"]
 
 
 class Result:
-    """Wrapper class for a raw SQL query result."""
+    """Wrapper class for a SQL query result."""
 
     def __init__(self, /, result: CursorResult) -> None:
         self._result: CursorResult = result
@@ -49,7 +49,7 @@ class Result:
 
 
 class QuickSQL:
-    """A quick way to run raw SQL in your Flask app."""
+    """A quick way to run SQL in your Flask app."""
 
     def __init__(self, app: Flask | None = None, /) -> "QuickSQL":
         _db: SQLAlchemy = None
