@@ -4,9 +4,12 @@
 
 ## Info
 
-A long time ago, I used the [`records`](https://pypi.org/project/records/) library to query a database with raw SQL. It was great, [until it wasn't](https://github.com/kennethreitz/records/issues/208).
+A long time ago, I used the [`records`](https://pypi.org/project/records/) library to query a database
+with raw SQL. It was great, [until it wasn't](https://github.com/kennethreitz/records/issues/208).
 
-Fast-forward many years and I was working on replacing the code that used `records`, but I needed to keep the existing code working. I also needed to remove `records` from my dependencies in order to update literally _everything_, but alas, I could not.
+Fast-forward many years and I was working on replacing the code that used `records`, but I needed to keep
+the existing code working. I also needed to remove `records` from my dependencies in order to update
+literally _everything_, but alas, I could not.
 
 Enter this little wrapper code I wrote. It _kinda_ keeps API compat but also kinda not.
 That wasn't my goal. My goal was to keep _enough_ compatibility so I wouldn't have to
@@ -36,10 +39,10 @@ def create_app():
 
     # You must set this
     app.config["SQLALCHEMY_DATABASE_URI"] = ...
-    quick_sql = QuickSQL(app)
+    db = QuickSQL(app)
 
     # A very wasteful yet all too common query, especially in PHP land
-    all_users = quick_sql.query("SELECT * FROM users").all()
+    all_users = db.query("SELECT * FROM users").all()
     print(all_users[0]["username"])
 
     return app
@@ -47,9 +50,12 @@ def create_app():
 
 The immediate result of `query()` isn't very useful. You'll want to chain a call to `.all()`, `.first()`, or `.one()`.
 
-You don't get property and key access like `records` gave you. You get one or the other. By default, you get a dictionary. Breaking API change from `records`? Yes, I don't care.
+You don't get property and key access like `records` gave you. You get one or the other.
+By default, you get a dictionary. Breaking API change from `records`? Yes. I don't care.
 
-To get a `collections.namedtuple`, pass `as_nt=True` as a parameter to any method. Your type hints will break since you can't define a hint for dynamically created named tuples, but it's what's it's.
+To get a `collections.namedtuple`, pass `as_nt=True` as a parameter to any method.
+Your type hints will break since you can't define a hint for dynamically created named tuples,
+but it's what's it's.
 
 You can also iterate over the whole result set, with each dictionary record being `yield`ed
 (you cannot get a named tuple when doing this):

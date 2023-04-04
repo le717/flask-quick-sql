@@ -5,8 +5,21 @@ description = "A quick way to run SQL in your Flask app."
 authors = ["Caleb <le717@users.noreply.github.com>"]
 readme = "README.md"
 license = "Public domain"
-repository = "https://github.com/le717"
-
+repository = "https://github.com/le717/flask-quick-sql"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Plugins",
+    "Framework :: Flask",
+    "License :: Public Domain",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Database",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed"
+]
 packages = [{include = "*.py"}]
 include = ["LICENSE", "README.md"]
 
