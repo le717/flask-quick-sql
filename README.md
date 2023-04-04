@@ -48,7 +48,8 @@ def create_app():
     return app
 ```
 
-The immediate result of `query()` isn't very useful. You'll want to chain a call to `.all()`, `.first()`, or `.one()`.
+The immediate result of `query()` isn't very useful. You'll want to chain a call to `.all()`, `.first()`,
+or `.one()`. If there's no data, `.first()` and `.one()` will return `None`.
 
 You don't get property and key access like `records` gave you. You get one or the other.
 By default, you get a dictionary. Breaking API change from `records`? Yes. I don't care.

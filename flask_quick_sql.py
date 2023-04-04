@@ -21,7 +21,7 @@ class Result:
         for r in self.all():
             yield r
 
-    def all(self, *, as_nt: bool = False) -> list[dict[str, Any]] | Row:
+    def all(self, *, as_nt: bool = False) -> list[dict[str, Any]] | list[Row]:
         """Fetch all results from the query."""
         return [r if as_nt else r._asdict() for r in self._result.all()]
 
