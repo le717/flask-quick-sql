@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "flask-quick-sql"
+version = "1.0.0"
+description = "A quick way to run SQL in your Flask app."
+authors = ["Caleb <le717@users.noreply.github.com>"]
+readme = "README.md"
+license = "Public domain"
+repository = "https://github.com/le717"
+
+packages = [{include = "*.py"}]
+include = ["LICENSE", "README.md"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flask = "^2.2.3"
+flask-sqlalchemy = "^3.0.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
