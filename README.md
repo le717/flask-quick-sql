@@ -21,9 +21,9 @@ when I deleted it from my app.
 
 ## Usage
 
-* Python 3.10+
-* Flask 2.2+
-* Flask-SQLAlchemy 3.0+
+* Python 3.11+
+* Flask 3.1+
+* Flask-SQLAlchemy 3.1+
 * SQLAlchemy 2.0+
 
 If a SQLAlchemy instance already exists in your app, it will be used. Otherwise, an instance
@@ -44,15 +44,19 @@ def create_app():
     # A very wasteful yet all too common query, especially in PHP land
     all_users = db.query("SELECT * FROM users").all()
     print(all_users[0]["username"])
-
     return app
 ```
 
-The immediate result of `query()` isn't very useful. You'll want to chain a call to `.all()`, `.first()`,
-or `.one()`. If there's no data, `.first()` and `.one()` will return `None`.
+The immediate result of `query()` isn't very useful. You'll want to chain a call to `.all()`,
+`.first()`, or `.one()`. If there's no data, `.first()` and `.one()` will return `None`.
 
-You don't get property and key access like `records` gave you. You get one or the other.
-By default, you get a dictionary. Breaking API change from `records`? Yes. I don't care.
+### v1.1.0+
+You get a `Record` instance that behaves like `records.Record`. Property, index, and key access? You
+betcha. All methods and iteration over `query()` itself provides a `Record`.
+
+### Before v1.1.0
+You don't get property and key access like `records` gave you. You get one or the other. By default,
+you get a dictionary. Breaking API change from `records`? Yes. I don't care.
 
 To get a `sqlalchemy.engine.Row` (basically `collections.namedtuple`) object instead,
 pass `as_nt=True` as a parameter to any method.
@@ -64,6 +68,7 @@ You can also iterate over the whole result set, with each dictionary record bein
 [User(**r) for r in quick_sql.query("SELECT * FROM users")]
 ```
 
+### Both lifetimes
 Because SQLAlchemy is used under the hood, prepared statements work as expected:
 
 ```python

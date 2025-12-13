@@ -1,9 +1,9 @@
 [project]
 name = "flask-quick-sql"
-version = "1.0.3"
+version = "1.1.0"
 description = "A quick way to run SQL in your Flask app."
 authors = [{ name = "Caleb", email = "le717@users.noreply.github.com" }]
-requires-python = ">=3.10,<4"
+requires-python = ">=3.11,<4"
 readme = "README.md"
 license = "Unlicense"
 classifiers = [
@@ -12,7 +12,6 @@ classifiers = [
     "Framework :: Flask",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Topic :: Database",
     "Topic :: Software Development :: Libraries",

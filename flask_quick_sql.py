@@ -2,11 +2,32 @@ from typing import Any, Generator
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Row
+from sqlalchemy.engine import Row
 from sqlalchemy.engine.cursor import CursorResult
 from sqlalchemy.sql import text
 
-__all__ = ["Result", "QuickSQL"]
+__all__ = ["Record", "Result", "QuickSQL"]
+
+
+class Record:
+    """Represent a record queried from the database."""
+
+    def __init__(self, record: Row) -> None:
+        self.__record: Row = record
+
+    def __contains__(self, item: Any) -> bool:
+        return item in self.__record._mapping
+
+    def __getattr__(self, name: str) -> Any:
+        try:
+            return getattr(self.__record, name)
+        except AttributeError:
+            raise AttributeError(f"'Record' object has no attribute {name!r}") from None
+
+    def __getitem__(self, key: int | str) -> Any:
+        if isinstance(key, int):
+            return self.__record[key]
+        return getattr(self.__record, key)
 
 
 class Result:
@@ -15,35 +36,29 @@ class Result:
     def __init__(self, /, result: CursorResult) -> None:
         self._result: CursorResult = result
 
-    def __iter__(self) -> Generator[dict[str, Any], None, None]:
+    def __iter__(self) -> Generator[Record, None, None]:
         """Iterate over all results from the query."""
         for r in self.all():
             yield r
 
-    def all(self, *, as_nt: bool = False) -> list[dict[str, Any]] | list[Row]:
+    def all(self) -> list[Record]:
         """Fetch all results from the query."""
-        return [r if as_nt else r._asdict() for r in self._result.all()]
+        return [Record(r) for r in self._result.all()]
 
-    def first(self, *, as_nt: bool = False) -> dict[str, Any] | Row | None:
+    def first(self) -> Record | None:
         """Fetch the first result from the query."""
-        # Specifically handle no results
-        if (r := self._result.first()) is None:
-            return None
-        return r if as_nt else r._asdict()
+        return Record(r) if (r := self._result.first()) else None
 
-    def one(self, *, as_nt: bool = False) -> dict[str, Any] | Row | None:
+    def one(self) -> Record | None:
         """Fetch the only result from the query."""
-        # Specifically handle no results
-        if (r := self._result.one_or_none()) is None:
-            return None
-        return r if as_nt else r._asdict()
+        return Record(r) if (r := self._result.one_or_none()) else None
 
 
 class QuickSQL:
     """A quick way to run SQL in your Flask app."""
 
-    def __init__(self, app: Flask | None = None, /) -> "QuickSQL":
-        _db: SQLAlchemy = None
+    def __init__(self, app: Flask | None = None, /) -> None:
+        _db: SQLAlchemy | None = None
 
         if app is not None:
             self.init_app(app)
