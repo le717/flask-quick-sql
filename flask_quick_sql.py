@@ -6,7 +6,6 @@ from sqlalchemy import Row
 from sqlalchemy.engine.cursor import CursorResult
 from sqlalchemy.sql import text
 
-
 __all__ = ["Result", "QuickSQL"]
 
 
